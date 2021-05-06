@@ -1,4 +1,6 @@
-# tiptap2-examples
+# tiptap2-image-example
+
+Created with vue cli 
 
 ## Project setup
 ```
