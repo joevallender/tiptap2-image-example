@@ -60,6 +60,7 @@
                     />
                 </svg>
             </button>
+            <button @click="addVideo">Video</button>
         </div>
         <bubble-menu
             class="bubble-menu"
@@ -128,6 +129,7 @@ import { Editor, EditorContent, BubbleMenu } from '@tiptap/vue-3'
 import { defaultExtensions } from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
 import CustomImage from '../extensions/custom-image'
+import ExternalVideo from '../extensions/external-video'
 
 export default {
     components: {
@@ -161,7 +163,8 @@ export default {
                     HTMLAttributes: {
                         class: 'custom-image'
                     }
-                })
+                }),
+                ExternalVideo
             ]
         })
     },
@@ -171,6 +174,16 @@ export default {
     },
 
     methods: {
+        addVideo() {
+            const url = window.prompt(
+                'Video URL',
+                'https://www.youtube.com/embed/iyd8dY8rRtA'
+            )
+
+            if (url) {
+                this.editor.chain().focus().setExternalVideo({ src: url }).run()
+            }
+        },
         addImage() {
             const url = window.prompt(
                 'Image URL',
@@ -219,6 +232,13 @@ export default {
             background: #ddd;
         }
     }
+}
+.video-wrapper { 
+    position: relative; padding-bottom: 56.25%; padding-top: 10px; height: 0; overflow: hidden; 
+}
+
+.video-wrapper iframe { 
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
 }
 .ProseMirror {
     &:focus,
