@@ -37,7 +37,7 @@ export default Image.extend({
 
                 return true
             },
-            setAttributes: (attributes) => ({ tr, dispatch }) => {
+            setSize: (attributes) => ({ tr, dispatch }) => {
                 // Check it's a valid size option
                 if (!this.options.sizes.includes(attributes.size)) {
                     return false
@@ -50,7 +50,7 @@ export default Image.extend({
                 // editor
                 //   .chain()
                 //   .focus()
-                //   .setAttributes({ size: 'small' })
+                //   .setSize({ size: 'small' })
                 //   .run()
                 //
                 // from the bubble menu
