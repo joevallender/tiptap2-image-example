@@ -118,6 +118,55 @@
                 Large
             </button>
             <span style="color: #aaa">|</span>
+            <button
+                @click="
+                    editor
+                        .chain()
+                        .focus()
+                        .setImage({ float: 'left' })
+                        .run()
+                "
+                :class="{
+                    'is-active': editor.isActive('custom-image', {
+                        float: 'left'
+                    })
+                }"
+            >
+                Left
+            </button>
+            <button
+                @click="
+                    editor
+                        .chain()
+                        .focus()
+                        .setImage({ float: 'none' })
+                        .run()
+                "
+                :class="{
+                    'is-active': editor.isActive('custom-image', {
+                        float: 'none'
+                    })
+                }"
+            >
+                No float
+            </button>
+            <button
+                @click="
+                    editor
+                        .chain()
+                        .focus()
+                        .setImage({ float: 'right' })
+                        .run()
+                "
+                :class="{
+                    'is-active': editor.isActive('custom-image', {
+                        float: 'right'
+                    })
+                }"
+            >
+                Right
+            </button>
+            <span style="color: #aaa">|</span>
             <button @click="addImage">Change</button>
         </bubble-menu>
         <editor-content :editor="editor" style="padding: 20px" />
@@ -270,6 +319,15 @@ export default {
     }
     .custom-image-large {
         max-width: 100%;
+    }
+    .custom-image-float-none {
+        float: none;
+    }
+    .custom-image-float-left {
+        float: left;
+    }
+    .custom-image-float-right {
+        float: right;
     }
 }
 

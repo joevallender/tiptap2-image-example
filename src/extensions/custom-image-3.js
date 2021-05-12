@@ -10,7 +10,12 @@ export default Image.extend({
             size: {
                 default: 'small',
                 rendered: false
+            },
+            float: {
+                default: 'none',
+                rendered: false
             }
+
         }
     },
 
@@ -31,8 +36,9 @@ export default Image.extend({
     },
 
     renderHTML({ node, HTMLAttributes }) {
-        const size = node.attrs.size
-        HTMLAttributes.class = ' custom-image-' + size
+
+        HTMLAttributes.class = ' custom-image-' + node.attrs.size
+        HTMLAttributes.class += ' custom-image-float-' + node.attrs.float
 
         return [
             'img',
