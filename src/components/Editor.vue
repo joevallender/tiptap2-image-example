@@ -175,7 +175,7 @@
 
 <script>
 import { Editor, EditorContent, BubbleMenu } from '@tiptap/vue-3'
-import { defaultExtensions } from '@tiptap/starter-kit'
+import StarterKit from "@tiptap/starter-kit";
 import Link from '@tiptap/extension-link'
 // import CustomImage from '../extensions/custom-image'
 // import CustomImage from '../extensions/custom-image-2'
@@ -205,7 +205,7 @@ export default {
         <img src="https://source.unsplash.com/K9QHL52rE2k/800x400" />
         `,
             extensions: [
-                ...defaultExtensions(),
+                StarterKit,
                 Link,
                 // You can just bring CustomImage in
                 // here, but it's a good example of

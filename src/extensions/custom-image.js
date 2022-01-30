@@ -4,7 +4,7 @@ import { mergeAttributes } from '@tiptap/core'
 export default Image.extend({
     name: 'custom-image',
 
-    defaultOptions: {
+    addOptions: {
         ...Image.options,
         sizes: ['small', 'medium', 'large']
     },

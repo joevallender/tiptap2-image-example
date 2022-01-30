@@ -1,4 +1,7 @@
 module.exports = {
     publicPath: './',
-    filenameHashing: true
-};
+    filenameHashing: true,
+    configureWebpack: {
+        devtool: 'source-map'
+    }
+}
