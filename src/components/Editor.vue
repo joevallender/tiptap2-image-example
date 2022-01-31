@@ -71,11 +71,7 @@
         >
             <button
                 @click="
-                    editor
-                        .chain()
-                        .focus()
-                        .setImage({ size: 'small' })
-                        .run()
+                    editor.chain().focus().setImage({ size: 'small' }).run()
                 "
                 :class="{
                     'is-active': editor.isActive('custom-image', {
@@ -87,11 +83,7 @@
             </button>
             <button
                 @click="
-                    editor
-                        .chain()
-                        .focus()
-                        .setImage({ size: 'medium' })
-                        .run()
+                    editor.chain().focus().setImage({ size: 'medium' }).run()
                 "
                 :class="{
                     'is-active': editor.isActive('custom-image', {
@@ -103,11 +95,7 @@
             </button>
             <button
                 @click="
-                    editor
-                        .chain()
-                        .focus()
-                        .setImage({ size: 'large' })
-                        .run()
+                    editor.chain().focus().setImage({ size: 'large' }).run()
                 "
                 :class="{
                     'is-active': editor.isActive('custom-image', {
@@ -120,11 +108,7 @@
             <span style="color: #aaa">|</span>
             <button
                 @click="
-                    editor
-                        .chain()
-                        .focus()
-                        .setImage({ float: 'left' })
-                        .run()
+                    editor.chain().focus().setImage({ float: 'left' }).run()
                 "
                 :class="{
                     'is-active': editor.isActive('custom-image', {
@@ -136,11 +120,7 @@
             </button>
             <button
                 @click="
-                    editor
-                        .chain()
-                        .focus()
-                        .setImage({ float: 'none' })
-                        .run()
+                    editor.chain().focus().setImage({ float: 'none' }).run()
                 "
                 :class="{
                     'is-active': editor.isActive('custom-image', {
@@ -152,11 +132,7 @@
             </button>
             <button
                 @click="
-                    editor
-                        .chain()
-                        .focus()
-                        .setImage({ float: 'right' })
-                        .run()
+                    editor.chain().focus().setImage({ float: 'right' }).run()
                 "
                 :class="{
                     'is-active': editor.isActive('custom-image', {
@@ -175,12 +151,15 @@
 
 <script>
 import { Editor, EditorContent, BubbleMenu } from '@tiptap/vue-3'
-import StarterKit from "@tiptap/starter-kit";
+import StarterKit from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
 // import CustomImage from '../extensions/custom-image'
 // import CustomImage from '../extensions/custom-image-2'
 import CustomImage from '../extensions/custom-image-3'
 import ExternalVideo from '../extensions/external-video'
+import  {PiPi}  from '../extensions/foo'
+
+console.log(PiPi);
 
 export default {
     components: {
@@ -215,7 +194,28 @@ export default {
                         class: 'custom-image'
                     }
                 }),
-                ExternalVideo
+                ExternalVideo,
+                ImagePaste.configure({
+                    fileMatchRegex: /^image\/(gif|jpe?g|a?png|svg|webp|bmp)/i,
+                    disableImagePaste: false,
+                    render: () => {
+                        return {
+                            onImagePaste: (files) => {
+                                files.forEach((file) => {
+                                    // upload image here, then add to the editor eg, editor.chain().focus().setImage({ src: url }).run();
+                                })
+                            },
+                            onDisabledImagePaste: (text) => {
+                                // add text to editor if you want, or display an error/upselll message
+                            },
+                            onImageDrop: (files) => {
+                                files.forEach((file) => {
+                                    // same as paste, upload the image and send it to the editor
+                                })
+                            }
+                        }
+                    }
+                })
             ]
         })
     },
@@ -284,11 +284,19 @@ export default {
         }
     }
 }
-.video-wrapper { 
-    position: relative; padding-bottom: 56.25%; padding-top: 10px; height: 0; overflow: hidden; 
+.video-wrapper {
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top: 10px;
+    height: 0;
+    overflow: hidden;
 }
-.video-wrapper iframe { 
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+.video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 .ProseMirror {
     &:focus,
