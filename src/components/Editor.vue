@@ -157,9 +157,7 @@ import Link from '@tiptap/extension-link'
 // import CustomImage from '../extensions/custom-image-2'
 import CustomImage from '../extensions/custom-image-3'
 import ExternalVideo from '../extensions/external-video'
-import  {PiPi}  from '../extensions/foo'
-
-console.log(PiPi);
+import { ImagePaste } from '../extensions/image-paste'
 
 export default {
     components: {
@@ -202,14 +200,35 @@ export default {
                         return {
                             onImagePaste: (files) => {
                                 files.forEach((file) => {
+                                    console.log(file)
                                     // upload image here, then add to the editor eg, editor.chain().focus().setImage({ src: url }).run();
                                 })
                             },
                             onDisabledImagePaste: (text) => {
+                                console.log(text)
                                 // add text to editor if you want, or display an error/upselll message
                             },
                             onImageDrop: (files) => {
                                 files.forEach((file) => {
+                                    console.log(file)
+                                    const reader = new FileReader()
+                                    reader.onload = (e) => {
+                                        // upload image here, then add to the editor eg, editor.chain().focus().setImage({ src: url }).run();
+                                        this.editor
+                                            .chain()
+                                            .insertContent([
+                                                {
+                                                    type: 'image',
+                                                    attrs: {
+                                                        src:
+                                                            e.target.result
+                                                    }
+                                                }
+                                            ])
+                                            .run()
+                                    }
+                                    reader.readAsDataURL(file)
+                                    // this.editor.chain().focus().setImage({ src: file.url }).run();
                                     // same as paste, upload the image and send it to the editor
                                 })
                             }

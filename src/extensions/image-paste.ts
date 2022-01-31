@@ -38,10 +38,18 @@ const mapTextItems = async (data: DataTransferItemList): Promise<string> => {
     const plainText = fullSet.find((item) => item.type === 'text/plain')
     const richText = fullSet.find((item) => item.type === 'text/html')
     return new Promise((resolve) => {
-        ;(richText || plainText).getAsString((html) => {
-            const value = html.replace(/<img[^>]*>/g, '')
-            resolve(value)
-        })
+        if (plainText) {
+            const txt = plainText.getAsString((html) => {
+                const value = html.replace(/<img[^>]*>/g, '')
+                resolve(value)
+            })
+        }
+        if (richText) {
+            const txt = richText.getAsString((html) => {
+                const value = html.replace(/<img[^>]*>/g, '')
+                resolve(value)
+            })
+        }
     })
 }
 
@@ -69,7 +77,10 @@ export const ImagePaste = Extension.create<ImagePasteOptions>({
                         ) {
                             mapTextItems(event.clipboardData.items).then(
                                 (value) => {
-                                    if (value && renderer) {
+                                    if (
+                                        value &&
+                                        renderer?.onDisabledImagePaste
+                                    ) {
                                         renderer.onDisabledImagePaste(value)
                                     }
                                 }
@@ -97,14 +108,15 @@ export const ImagePaste = Extension.create<ImagePasteOptions>({
                         return false
                     },
 
-                    handleDrop(_view, event: DragEvent) {
+                    handleDrop(_view, event: Event) {
+                        const dragEvent = event as DragEvent
                         if (
                             !options.disableImagePaste &&
-                            event.dataTransfer?.files?.length &&
+                            dragEvent.dataTransfer?.files?.length &&
                             renderer?.onImageDrop
                         ) {
                             const files = mapDataItems(
-                                event.dataTransfer.items,
+                                dragEvent.dataTransfer.items,
                                 options.fileMatchRegex
                             )
 
