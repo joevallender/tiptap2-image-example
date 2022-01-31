@@ -172,6 +172,7 @@ export default {
     },
 
     mounted() {
+        const that = this
         this.editor = new Editor({
             content: `
         <h1>Tiptap image example</h1>
@@ -199,38 +200,14 @@ export default {
                     render: () => {
                         return {
                             onImagePaste: (files) => {
-                                files.forEach((file) => {
-                                    console.log(file)
-                                    // upload image here, then add to the editor eg, editor.chain().focus().setImage({ src: url }).run();
-                                })
+                                that.loadAllFiles(files);
                             },
                             onDisabledImagePaste: (text) => {
                                 console.log(text)
                                 // add text to editor if you want, or display an error/upselll message
                             },
                             onImageDrop: (files) => {
-                                files.forEach((file) => {
-                                    console.log(file)
-                                    const reader = new FileReader()
-                                    reader.onload = (e) => {
-                                        // upload image here, then add to the editor eg, editor.chain().focus().setImage({ src: url }).run();
-                                        this.editor
-                                            .chain()
-                                            .insertContent([
-                                                {
-                                                    type: 'image',
-                                                    attrs: {
-                                                        src:
-                                                            e.target.result
-                                                    }
-                                                }
-                                            ])
-                                            .run()
-                                    }
-                                    reader.readAsDataURL(file)
-                                    // this.editor.chain().focus().setImage({ src: file.url }).run();
-                                    // same as paste, upload the image and send it to the editor
-                                })
+                                that.loadAllFiles(files);
                             }
                         }
                     }
@@ -244,6 +221,31 @@ export default {
     },
 
     methods: {
+        loadAllFiles(files) {
+            files.forEach((file) => {
+                console.log(file)
+                const reader = new FileReader()
+                reader.onload = (e) => {
+                    // upload image here, then add to the editor eg, editor.chain().focus().setImage({ src: url }).run();
+                    this.editor.chain().focus().setImage({ src: e.target.result }).run();
+                    // this.editor
+                    //     .chain()
+                    //     .focus()
+                    //     .insertContent([
+                    //         {
+                    //             type: 'custom-image',
+                    //             attrs: {
+                    //                 src: e.target.result
+                    //             }
+                    //         }
+                    //     ])
+                    //     .run()
+                }
+                reader.readAsDataURL(file)
+                // this.editor.chain().focus().setImage({ src: file.url }).run();
+                // same as paste, upload the image and send it to the editor
+            })
+        },
         addVideo() {
             const url = window.prompt(
                 'Video URL',
@@ -279,6 +281,7 @@ export default {
     max-width: 900px;
     background: white;
     margin: 0 auto;
+    height: auto;
 }
 .controls {
     padding: 10px;
