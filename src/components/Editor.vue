@@ -71,11 +71,7 @@
         >
             <button
                 @click="
-                    editor
-                        .chain()
-                        .focus()
-                        .setImage({ size: 'small' })
-                        .run()
+                    editor.chain().focus().setImage({ size: 'small' }).run()
                 "
                 :class="{
                     'is-active': editor.isActive('custom-image', {
@@ -87,11 +83,7 @@
             </button>
             <button
                 @click="
-                    editor
-                        .chain()
-                        .focus()
-                        .setImage({ size: 'medium' })
-                        .run()
+                    editor.chain().focus().setImage({ size: 'medium' }).run()
                 "
                 :class="{
                     'is-active': editor.isActive('custom-image', {
@@ -103,11 +95,7 @@
             </button>
             <button
                 @click="
-                    editor
-                        .chain()
-                        .focus()
-                        .setImage({ size: 'large' })
-                        .run()
+                    editor.chain().focus().setImage({ size: 'large' }).run()
                 "
                 :class="{
                     'is-active': editor.isActive('custom-image', {
@@ -120,11 +108,7 @@
             <span style="color: #aaa">|</span>
             <button
                 @click="
-                    editor
-                        .chain()
-                        .focus()
-                        .setImage({ float: 'left' })
-                        .run()
+                    editor.chain().focus().setImage({ float: 'left' }).run()
                 "
                 :class="{
                     'is-active': editor.isActive('custom-image', {
@@ -136,11 +120,7 @@
             </button>
             <button
                 @click="
-                    editor
-                        .chain()
-                        .focus()
-                        .setImage({ float: 'none' })
-                        .run()
+                    editor.chain().focus().setImage({ float: 'none' }).run()
                 "
                 :class="{
                     'is-active': editor.isActive('custom-image', {
@@ -152,11 +132,7 @@
             </button>
             <button
                 @click="
-                    editor
-                        .chain()
-                        .focus()
-                        .setImage({ float: 'right' })
-                        .run()
+                    editor.chain().focus().setImage({ float: 'right' }).run()
                 "
                 :class="{
                     'is-active': editor.isActive('custom-image', {
@@ -175,12 +151,13 @@
 
 <script>
 import { Editor, EditorContent, BubbleMenu } from '@tiptap/vue-3'
-import { defaultExtensions } from '@tiptap/starter-kit'
+import StarterKit from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
 // import CustomImage from '../extensions/custom-image'
 // import CustomImage from '../extensions/custom-image-2'
 import CustomImage from '../extensions/custom-image-3'
 import ExternalVideo from '../extensions/external-video'
+import { ImagePaste } from '../extensions/image-paste'
 
 export default {
     components: {
@@ -195,6 +172,7 @@ export default {
     },
 
     mounted() {
+        const that = this
         this.editor = new Editor({
             content: `
         <h1>Tiptap image example</h1>
@@ -205,7 +183,7 @@ export default {
         <img src="https://source.unsplash.com/K9QHL52rE2k/800x400" />
         `,
             extensions: [
-                ...defaultExtensions(),
+                StarterKit,
                 Link,
                 // You can just bring CustomImage in
                 // here, but it's a good example of
@@ -215,7 +193,25 @@ export default {
                         class: 'custom-image'
                     }
                 }),
-                ExternalVideo
+                ExternalVideo,
+                ImagePaste.configure({
+                    fileMatchRegex: /^image\/(gif|jpe?g|a?png|svg|webp|bmp)/i,
+                    disableImagePaste: false,
+                    render: () => {
+                        return {
+                            onImagePaste: (files) => {
+                                that.loadAllFiles(files);
+                            },
+                            onDisabledImagePaste: (text) => {
+                                console.log(text)
+                                // add text to editor if you want, or display an error/upselll message
+                            },
+                            onImageDrop: (files) => {
+                                that.loadAllFiles(files);
+                            }
+                        }
+                    }
+                })
             ]
         })
     },
@@ -225,6 +221,31 @@ export default {
     },
 
     methods: {
+        loadAllFiles(files) {
+            files.forEach((file) => {
+                console.log(file)
+                const reader = new FileReader()
+                reader.onload = (e) => {
+                    // upload image here, then add to the editor eg, editor.chain().focus().setImage({ src: url }).run();
+                    this.editor.chain().focus().setImage({ src: e.target.result }).run();
+                    // this.editor
+                    //     .chain()
+                    //     .focus()
+                    //     .insertContent([
+                    //         {
+                    //             type: 'custom-image',
+                    //             attrs: {
+                    //                 src: e.target.result
+                    //             }
+                    //         }
+                    //     ])
+                    //     .run()
+                }
+                reader.readAsDataURL(file)
+                // this.editor.chain().focus().setImage({ src: file.url }).run();
+                // same as paste, upload the image and send it to the editor
+            })
+        },
         addVideo() {
             const url = window.prompt(
                 'Video URL',
@@ -260,6 +281,7 @@ export default {
     max-width: 900px;
     background: white;
     margin: 0 auto;
+    height: auto;
 }
 .controls {
     padding: 10px;
@@ -284,11 +306,19 @@ export default {
         }
     }
 }
-.video-wrapper { 
-    position: relative; padding-bottom: 56.25%; padding-top: 10px; height: 0; overflow: hidden; 
+.video-wrapper {
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top: 10px;
+    height: 0;
+    overflow: hidden;
 }
-.video-wrapper iframe { 
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+.video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 .ProseMirror {
     &:focus,

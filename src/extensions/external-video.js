@@ -3,7 +3,7 @@ import { Node, mergeAttributes } from '@tiptap/core'
 export default Node.create({
     name: 'external-video',
   
-    defaultOptions: {
+    addOptions: {
       inline: false,
       HTMLAttributes: {},
     },
